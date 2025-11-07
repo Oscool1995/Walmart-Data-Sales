@@ -57,36 +57,22 @@ This project is a data analysis solution designed to extract critical business i
      - Sales performance by time, city, and payment method.
      - Analyzing peak sales periods and customer buying patterns.
      - Profit margin analysis by branch and category.
-```sq
-WITH revenue_2022 AS (
-    SELECT 
-        branch,
-        SUM(total) AS revenue
-    FROM walmart
-    WHERE YEAR(STR_TO_DATE(date, '%d/%m/%Y')) = 2022
-    GROUP BY branch
-),
-revenue_2023 AS (
-    SELECT 
-        branch,
-        SUM(total) AS revenue
-    FROM walmart
-    WHERE YEAR(STR_TO_DATE(date, '%d/%m/%Y')) = 2023
-    GROUP BY branch
-)
-SELECT 
-    r2022.branch,
-    r2022.revenue AS last_year_revenue,
-    r2023.revenue AS current_year_revenue,
-    ROUND(((r2022.revenue - r2023.revenue) / r2022.revenue) * 100, 2) AS revenue_decrease_ratio
-FROM revenue_2022 AS r2022
-JOIN revenue_2023 AS r2023 ON r2022.branch = r2023.branch
-WHERE r2022.revenue > r2023.revenue
-ORDER BY revenue_decrease_ratio DESC
-LIMIT 5;
-```
    - **Documentation**: Keep clear notes of each query's objective, approach, and results.
-
+EXAMPLE
+```sq
+WITH cte AS (
+    SELECT 
+        branch,
+        payment_method,
+        COUNT(*) AS total_trans,
+        RANK() OVER(PARTITION BY branch ORDER BY COUNT(*) DESC) AS rank
+    FROM walmart
+    GROUP BY branch, payment_method
+)
+SELECT branch, payment_method AS preferred_payment_method
+FROM cte
+WHERE rank = 1;
+```
 ---
 
 ## Requirements
