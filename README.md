@@ -58,7 +58,7 @@ This project is a data analysis solution designed to extract critical business i
      - Analyzing peak sales periods and customer buying patterns.
      - Profit margin analysis by branch and category.
    - **Documentation**: Keep clear notes of each query's objective, approach, and results.
-EXAMPLE
+   - EXAMPLE
 ```sq
 WITH cte AS (
     SELECT 
